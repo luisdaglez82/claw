@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Deploy a Customer Service Agent with Claude and n8n (No Code Required) — EstrategiaClaw</title>
+  <meta name="description" content="Step-by-step guide to building a customer service AI agent using Claude and n8n. No coding. Real costs, real tradeoffs.">
+</head>
+<body>
+<article>
+
+<h1>How to Deploy a Customer Service Agent with Claude and n8n (No Code Required)</h1>
+
+<p>Every unanswered message after hours is a lost customer. An AI agent connected to your email, webchat, or messaging platform can handle inquiries, book appointments, and escalate edge cases to a human. Here is exactly how to build one with Claude and n8n, without writing code.</p>
+
+<h2>What this agent actually does</h2>
+
+<p>This is not a keyword-matching chatbot from 2019. A Claude-powered agent reads the full message, understands intent, and responds the way a trained employee would.</p>
+
+<p>In practice, it can:</p>
+
+<ul>
+  <li>Answer common questions about your business (hours, pricing, location, policies)</li>
+  <li>Classify incoming messages: sales lead, support request, complaint, urgent</li>
+  <li>Book appointments via Google Calendar or Calendly</li>
+  <li>Hand off to a human when it detects frustration or a problem it cannot solve</li>
+  <li>Run 24/7 on email, webchat, or WhatsApp</li>
+</ul>
+
+<h2>The three components</h2>
+
+<p><strong>1. Claude (the brain).</strong> This is the AI model that processes messages and generates responses. For customer service, Claude Haiku 4.5 is the right choice: fast, affordable, and smart enough for this job. It costs $1 per million input tokens and $5 per million output tokens. An average support conversation uses about 3,700 tokens. That puts 10,000 conversations at roughly $37. Verified at <a href="https://platform.claude.com/docs/en/about-claude/pricing">platform.claude.com</a>.</p>
+
+<p><strong>2. n8n (the nervous system).</strong> n8n is the automation platform that wires everything together: receives the customer message, sends it to Claude, takes the response, and routes it back. It also connects to your calendar, CRM, or database. n8n Cloud starts at 24 euros per month (Starter plan, 2,500 executions). If you have a VPS or server, the self-hosted Community Edition is free with unlimited executions. Check current pricing at <a href="https://n8n.io/pricing/">n8n.io/pricing</a>.</p>
+
+<p><strong>3. An input channel.</strong> Email, a website chat widget, or WhatsApp Business API. n8n has native nodes for all three.</p>
+
+<h2>Building the workflow in n8n</h2>
+
+<p>The complete flow uses five nodes, all drag-and-drop:</p>
+
+<p><strong>Node 1: Trigger.</strong> A webhook that receives the incoming message. If you use email, this fires every time a new message hits your support inbox.</p>
+
+<p><strong>Node 2: Context.</strong> A node that pulls your business information from a Google Sheet or database: hours, pricing, return policy, FAQs. This gets injected as context for Claude.</p>
+
+<p><strong>Node 3: Claude (AI Agent).</strong> n8n has a native AI Agent node that connects directly to the Anthropic API. It takes the customer message plus your business context and generates a response.</p>
+
+<p><strong>Node 4: Router.</strong> An IF node that checks whether Claude flagged the conversation for human escalation. If the response contains a tag like [ESCALATE], the flow branches to notify a team member via Slack or email.</p>
+
+<p><strong>Node 5: Reply.</strong> Sends Claude's response back to the customer through the same channel they used.</p>
+
+<h2>What this costs per month</h2>
+
+<p>Real numbers for a business handling 50 inquiries per day:</p>
+
+<ul>
+  <li>50 inquiries x 30 days = 1,500 conversations per month</li>
+  <li>Claude Haiku 4.5 for 1,500 conversations: approximately $5.50 per month</li>
+  <li>n8n Cloud Starter: 24 euros per month (or free self-hosted)</li>
+  <li>WhatsApp Business API or Intercom widget: $15-30 per month at that volume</li>
+</ul>
+
+<p><strong>Estimated total: $5.50 to $60 per month.</strong></p>
+
+<p>Compare that to a part-time hire covering nights and weekends. Or to the revenue you lose when nobody replies to a Saturday evening inquiry.</p>
+
+<h2>Mistakes to avoid</h2>
+
+<p><strong>Do not launch without testing against real questions.</strong> Feed the agent your 50 most common customer questions before going live. Review every response. Tune the system prompt until the answers are accurate and match your brand voice.</p>
+
+<p><strong>Do not remove the human option.</strong> There must always be a path to a real person. The agent should know when to say "let me connect you with someone on my team." Frustrated customers who cannot reach a human leave and do not come back.</p>
+
+<p><strong>Do not default to the most expensive model.</strong> Claude Opus 4.6 costs 5x more than Haiku 4.5 on both input and output. For standard customer service, Haiku is more than enough. Save Opus for tasks that genuinely need complex reasoning.</p>
+
+<h2>What you can do today</h2>
+
+<ol>
+  <li><strong>Create a free account at <a href="https://n8n.io">n8n.io</a></strong> and explore the AI Agent node. Connect your Anthropic API key (get one at <a href="https://console.anthropic.com">console.anthropic.com</a> with free starter credits) and run a test query.</li>
+  <li><strong>Write down your 20 most common customer questions</strong> with the correct answers for each. This document becomes the context that feeds Claude. Skip this step and the agent will hallucinate answers about your business.</li>
+  <li><strong>Build the 5-node workflow described above</strong> and test it with your personal email or a test phone number. Do not connect it to real customers until you have tested at least 50 interactions and are satisfied with the quality.</li>
+</ol>
+
+<h2>Resources</h2>
+<ul>
+  <li><a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude API Pricing (Anthropic)</a></li>
+  <li><a href="https://n8n.io/pricing/">n8n Cloud Pricing</a></li>
+  <li><a href="https://n8n.io/integrations/claude/">Claude + n8n Integration</a></li>
+  <li><a href="https://console.anthropic.com">Anthropic Console (get your API key)</a></li>
+  <li><a href="https://n8n.io/ai-agents/">n8n AI Agents Documentation</a></li>
+</ul>
+
+</article>
+</body>
+</html>
