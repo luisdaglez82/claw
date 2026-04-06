@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cómo desplegar un agente de atención al cliente con Claude y n8n sin programar — EstrategiaClaw</title>
+  <meta name="description" content="Guía paso a paso para montar un agente de atención al cliente usando Claude y n8n. Sin código. Con costos reales y pasos concretos.">
+</head>
+<body>
+<article>
+
+<h1>Cómo desplegar un agente de atención al cliente con Claude y n8n sin programar</h1>
+
+<p>Tu negocio pierde clientes cada noche cuando nadie contesta. Un agente de IA conectado a WhatsApp o email puede responder consultas, agendar citas y escalar problemas graves a un humano, sin que toques una sola línea de código. Hoy te muestro exactamente cómo armarlo con Claude y n8n.</p>
+
+<h2>Qué hace exactamente este agente</h2>
+
+<p>No estamos hablando de un chatbot torpe que repite respuestas enlatadas. Un agente de atención al cliente con Claude entiende contexto, mantiene el hilo de la conversación y toma decisiones.</p>
+
+<p>En la práctica, este agente puede:</p>
+
+<ul>
+  <li>Responder preguntas frecuentes sobre tu negocio (horarios, precios, ubicación)</li>
+  <li>Clasificar el tipo de consulta: venta, soporte, queja, urgencia</li>
+  <li>Agendar citas conectándose a Google Calendar</li>
+  <li>Escalar a un humano cuando detecta frustración o un tema que no puede resolver</li>
+  <li>Funcionar 24/7 por WhatsApp, email o webchat</li>
+</ul>
+
+<p>La diferencia con un chatbot tradicional es que Claude razona. No busca palabras clave. Lee el mensaje completo, entiende la intención y responde como lo haría un empleado bien entrenado.</p>
+
+<h2>Las piezas que necesitas</h2>
+
+<p>Este sistema tiene tres componentes. Ninguno requiere programar.</p>
+
+<p><strong>1. Claude (el cerebro).</strong> Es el modelo de IA que procesa y genera las respuestas. Para atención al cliente, Claude Haiku 4.5 es la mejor opción: es rápido, barato y suficientemente inteligente para este trabajo. Cuesta $1 USD por millón de tokens de entrada y $5 USD por millón de tokens de salida. Una conversación promedio de soporte usa unos 3,700 tokens. Eso significa que 10,000 conversaciones te cuestan aproximadamente $37 USD. Precio verificado en <a href="https://platform.claude.com/docs/en/about-claude/pricing">platform.claude.com</a>.</p>
+
+<p><strong>2. n8n (el sistema nervioso).</strong> n8n es la plataforma de automatización que conecta todo: recibe el mensaje del cliente, se lo pasa a Claude, toma la respuesta y la envía de vuelta. También conecta con tu calendario, tu CRM o tu base de datos. n8n Cloud arranca en 24 euros al mes (plan Starter, 2,500 ejecuciones). Pero si tienes un servidor o VPS, puedes instalar la versión Community gratis, con ejecuciones ilimitadas. Verifica el precio actual en <a href="https://n8n.io/pricing/">n8n.io/pricing</a>.</p>
+
+<p><strong>3. Un canal de entrada.</strong> WhatsApp Business API, un widget de chat en tu sitio web, o simplemente email. n8n tiene nodos nativos para los tres.</p>
+
+<h2>Cómo se arma en n8n (sin código)</h2>
+
+<p>El flujo completo tiene 5 nodos. Así funciona:</p>
+
+<p><strong>Nodo 1: Trigger.</strong> Un webhook que recibe el mensaje entrante. Si usas WhatsApp Business API, el mensaje llega aquí automáticamente cada vez que un cliente escribe.</p>
+
+<p><strong>Nodo 2: Contexto.</strong> Un nodo que busca en tu base de datos o Google Sheet la información del negocio: horarios, precios, políticas de devolución, FAQ. Esto se inyecta como contexto para Claude.</p>
+
+<p><strong>Nodo 3: Claude (AI Agent).</strong> n8n tiene un nodo nativo de AI Agent que se conecta directamente a la API de Anthropic. Le pasas el mensaje del cliente más el contexto de tu negocio. Claude genera la respuesta.</p>
+
+<p><strong>Nodo 4: Decisión.</strong> Un nodo IF que revisa si Claude marcó la conversación para escalamiento humano. Si la respuesta incluye una etiqueta como [ESCALAR], el flujo se desvía a notificar a un humano por Slack o email.</p>
+
+<p><strong>Nodo 5: Respuesta.</strong> Envía la respuesta de Claude de vuelta al cliente por el mismo canal por donde escribió.</p>
+
+<p>Todo esto se arrastra y suelta en el editor visual de n8n. Cero código.</p>
+
+<h2>Cuánto cuesta operar esto al mes</h2>
+
+<p>Hagamos números reales para un negocio que recibe 50 consultas diarias:</p>
+
+<ul>
+  <li>50 consultas x 30 días = 1,500 conversaciones al mes</li>
+  <li>Claude Haiku 4.5 para 1,500 conversaciones: aproximadamente $5.50 USD al mes</li>
+  <li>n8n Cloud Starter: 24 euros al mes (o gratis si usas self-hosted)</li>
+  <li>WhatsApp Business API: varía por proveedor, pero estima $15-30 USD al mes para ese volumen</li>
+</ul>
+
+<p><strong>Total estimado: entre $5.50 y $60 USD al mes.</strong></p>
+
+<p>Compara eso con contratar a una persona para turno nocturno. O con los clientes que pierdes porque nadie les contestó a las 11pm un domingo.</p>
+
+<h2>Trampas que debes evitar</h2>
+
+<p><strong>No lances sin probar con casos reales.</strong> Antes de conectar el agente a tus clientes, pásale las 50 preguntas más comunes de tu negocio. Revisa cada respuesta. Ajusta el prompt del sistema hasta que las respuestas sean correctas y con tu tono de voz.</p>
+
+<p><strong>No elimines la opción humana.</strong> Siempre debe haber una forma de hablar con una persona real. El agente debe saber cuándo decir "te conecto con alguien de mi equipo". Los clientes frustrados que no pueden hablar con un humano se van y no vuelven.</p>
+
+<p><strong>No uses el modelo más caro "por si acaso".</strong> Claude Opus 4.6 cuesta 5 veces más que Haiku 4.5 en entrada y salida. Para atención al cliente estándar, Haiku sobra. Guarda Opus para tareas que realmente necesiten razonamiento complejo.</p>
+
+<p><strong>No ignores las métricas.</strong> n8n te permite registrar cada conversación. Revisa semanalmente: qué preguntas no pudo responder el agente, cuántas veces escaló a un humano, cuántos clientes abandonaron la conversación. Esos datos te dicen exactamente qué ajustar.</p>
+
+<h2>Lo que puedes hacer hoy</h2>
+
+<ol>
+  <li><strong>Crea una cuenta gratuita en <a href="https://n8n.io">n8n.io</a></strong> y explora el nodo AI Agent. Conecta tu API key de Anthropic (puedes obtener una en <a href="https://console.anthropic.com">console.anthropic.com</a> con créditos gratuitos iniciales) y hazle una pregunta de prueba.</li>
+  <li><strong>Escribe las 20 preguntas más frecuentes que recibe tu negocio</strong> y las respuestas correctas para cada una. Este documento será el contexto que alimenta a Claude. Sin este paso, el agente va a inventar respuestas.</li>
+  <li><strong>Construye el flujo de 5 nodos descrito arriba</strong> y pruébalo con tu propio WhatsApp personal o un email de prueba. No lo conectes a clientes reales hasta que hayas probado al menos 50 interacciones y estés satisfecho con las respuestas.</li>
+</ol>
+
+<h2>Recursos</h2>
+<ul>
+  <li><a href="https://platform.claude.com/docs/en/about-claude/pricing">Precios de la API de Claude (Anthropic)</a></li>
+  <li><a href="https://n8n.io/pricing/">Precios de n8n Cloud</a></li>
+  <li><a href="https://n8n.io/integrations/claude/">Integración Claude + n8n</a></li>
+  <li><a href="https://console.anthropic.com">Consola de Anthropic (para obtener tu API key)</a></li>
+  <li><a href="https://n8n.io/ai-agents/">Documentación de AI Agents en n8n</a></li>
+</ul>
+
+</article>
+</body>
+</html>
